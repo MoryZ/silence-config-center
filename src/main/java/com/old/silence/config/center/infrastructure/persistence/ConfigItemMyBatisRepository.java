@@ -38,8 +38,8 @@ public class ConfigItemMyBatisRepository implements ConfigItemRepository {
     }
 
     @Override
-    public String findByCriteria(String namespaceId, String env, String componentCode, ConfigItemFormatType type) {
-        return configItemDao.findByCriteria(namespaceId, env, componentCode, type);
+    public String findByNameSpaceIdAndEnvNameAndComponentCodeAndFormatType(String namespaceId, String env, String componentCode, ConfigItemFormatType type) {
+        return configItemDao.findByNameSpaceIdAndEnvNameAndComponentCodeAndFormatType(namespaceId, env, componentCode, type);
     }
 
 
