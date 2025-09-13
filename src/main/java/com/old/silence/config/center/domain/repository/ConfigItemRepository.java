@@ -59,9 +59,9 @@ public interface ConfigItemRepository {
      * 查询配置项
      * @param namespace 命名空间
      * @param env 环境
-     * @param componentCode 应用id
+     * @param componentId 应用id
      * @param type 配置类型
      * @return 查询配置
      */
-    String findByCriteria(String namespace, String env, String componentCode, ConfigItemFormatType type);
+    String findByNameSpaceIdAndEnvNameAndComponentCodeAndFormatType(String namespace, String env, String componentId, ConfigItemFormatType type);
 }

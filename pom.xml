@@ -14,10 +14,92 @@
     <packaging>jar</packaging>
 
     <dependencies>
+
         <dependency>
             <groupId>com.old.silence</groupId>
-            <artifactId>silence-auth-center</artifactId>
+            <artifactId>silence-auth-center-client</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.old.silence</groupId>
+            <artifactId>platform-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.old.silence</groupId>
+            <artifactId>platform-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.old.silence</groupId>
+            <artifactId>platform-webmvc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.old.silence</groupId>
+            <artifactId>platform-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.old.silence</groupId>
+            <artifactId>platform-data-mybatis-plus</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-openfeign-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-jdk8</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct.extensions.spring</groupId>
+            <artifactId>mapstruct-spring-annotations</artifactId>
+            <version>${mapstruct-spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
     </dependencies>
 </project>
