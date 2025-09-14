@@ -1,7 +1,5 @@
 server:
   port: 8097
-  servlet:
-    context-path: /config
 
 spring:
   application:
@@ -20,12 +18,6 @@ spring:
       idle-timeout: 30000
       pool-name: silence_config_center_pool
       max-lifetime: 1800000
-  cloud:
-    nacos:
-      discovery:
-        server-addr: localhost:8848
-        username: nacos
-        password: nacos
 
 mybatis-plus:
   configuration:
@@ -49,9 +41,11 @@ platform:
     identifier: CC
 
 
+
+
 silence:
   auth:
     center:
       security:
         api:
-          white-list: /api/v1/configItems
+          white-list: /api/v1/configItems,/api/v1/client/**
