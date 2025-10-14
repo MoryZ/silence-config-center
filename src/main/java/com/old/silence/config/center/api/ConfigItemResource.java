@@ -19,13 +19,18 @@ import com.old.silence.config.center.domain.service.ClientRegistryService;
 import com.old.silence.config.center.domain.service.LongPollingService;
 import com.old.silence.config.center.dto.ConfigItemCommand;
 import com.old.silence.config.center.dto.ConfigItemContentCommand;
+import com.old.silence.config.center.dto.ConfigItemQuery;
 import com.old.silence.config.center.enums.ConfigItemFormatType;
+import com.old.silence.config.center.vo.ConfigEnvironmentVo;
 import com.old.silence.config.center.vo.ConfigItemVo;
+import com.old.silence.core.util.CollectionUtils;
+import com.old.silence.data.commons.converter.QueryWrapperConverter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -58,22 +63,32 @@ public class ConfigItemResource {
     }
 
     @GetMapping(value = "/configItems", params = {"pageNo", "pageSize"})
-    public IPage<ConfigItemVo> query(Page<ConfigItem> page,
-                                     @RequestParam BigInteger configEnvironmentId) {
-        var configItemPage = configItemRepository.query(page, configEnvironmentId);
-        var configEnvironmentVo = configEnvironmentRepository.findById(configEnvironmentId);
+    public IPage<ConfigItemVo> query(Page<ConfigItem> page, ConfigItemQuery configItemQuery) {
 
-        configItemPage.getRecords().forEach(configItem -> {
+        var queryWrapper = QueryWrapperConverter.convert(configItemQuery, ConfigItem.class);
+        var configItemPage = configItemRepository.query(page, queryWrapper);
+        AtomicReference<ConfigEnvironmentVo> configEnvironmentVo = new AtomicReference<>();
+        if (CollectionUtils.isNotEmpty(configItemPage.getRecords())) {
+            CollectionUtils.firstElement(configItemPage.getRecords())
+                    .map(ConfigItem::getConfigEnvironmentId)
+                    .ifPresent(configEnvironmentId -> {
+                        configEnvironmentVo.set(configEnvironmentRepository.findById(configEnvironmentId));
+                    });
 
-        });
+        }
 
         return configItemPage.convert(configItem -> {
-            var configKey = String.format("%s+%s+%s",
-                    configEnvironmentVo.getComponentCode(),
-                    configEnvironmentVo.getName(),
-                    configItem.getNamespaceId());
-            var listeningClientIps = clientRegistryService.getListeningClientIps(configKey);
-            return new ConfigItemVo(configItem, listeningClientIps);
+            if (configEnvironmentVo.get() != null) {
+                var configKey = String.format("%s+%s+%s",
+                        configEnvironmentVo.get().getComponentCode(),
+                        configEnvironmentVo.get().getName(),
+                        configItem.getNamespaceId());
+                var listeningClientIps = clientRegistryService.getListeningClientIps(configKey);
+                return new ConfigItemVo(configItem, listeningClientIps);
+            } else {
+                return new ConfigItemVo(configItem, null);
+            }
+
         });
     }
 

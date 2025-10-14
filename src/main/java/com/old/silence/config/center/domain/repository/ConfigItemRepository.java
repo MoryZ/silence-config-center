@@ -1,5 +1,6 @@
 package com.old.silence.config.center.domain.repository;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.old.silence.config.center.domain.model.ConfigItem;
 import com.old.silence.config.center.enums.ConfigItemFormatType;
@@ -22,7 +23,7 @@ public interface ConfigItemRepository {
      * @param configEnvironmentId 配置环境id
      * @return 配置项列表
      */
-    Page<ConfigItem> query(Page<ConfigItem> page, BigInteger configEnvironmentId);
+    Page<ConfigItem> query(Page<ConfigItem> page, QueryWrapper<ConfigItem> configEnvironmentId);
 
     /**
      * 创建配置项

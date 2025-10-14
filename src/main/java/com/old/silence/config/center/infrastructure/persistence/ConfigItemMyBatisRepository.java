@@ -26,9 +26,7 @@ public class ConfigItemMyBatisRepository implements ConfigItemRepository {
     }
 
     @Override
-    public Page<ConfigItem> query(Page<ConfigItem> page, BigInteger configEnvironmentId) {
-        QueryWrapper<ConfigItem> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("config_environment_id", configEnvironmentId);
+    public Page<ConfigItem> query(Page<ConfigItem> page, QueryWrapper<ConfigItem> queryWrapper) {
         return configItemDao.selectPage(page, queryWrapper);
     }
 
