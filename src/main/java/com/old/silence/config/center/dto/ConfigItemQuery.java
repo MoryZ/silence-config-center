@@ -7,19 +7,40 @@ import com.old.silence.data.commons.converter.Part;
 import java.math.BigInteger;
 
 
-
 /**
  * @author moryzang
  */
 public class ConfigItemQuery  {
     @RelationalQueryProperty(type = Part.Type.SIMPLE_PROPERTY)
-    private BigInteger configComponentId;
+    private BigInteger configEnvironmentId;
 
-    public BigInteger getConfigComponentId() {
-        return configComponentId;
+    @RelationalQueryProperty(type = Part.Type.CONTAINING)
+    private String namespaceId;
+
+    @RelationalQueryProperty(type = Part.Type.CONTAINING)
+    private BigInteger content;
+
+    public BigInteger getConfigEnvironmentId() {
+        return configEnvironmentId;
     }
 
-    public void setConfigComponentId(BigInteger configComponentId) {
-        this.configComponentId = configComponentId;
+    public void setConfigEnvironmentId(BigInteger configEnvironmentId) {
+        this.configEnvironmentId = configEnvironmentId;
+    }
+
+    public String getNamespaceId() {
+        return namespaceId;
+    }
+
+    public void setNamespaceId(String namespaceId) {
+        this.namespaceId = namespaceId;
+    }
+
+    public BigInteger getContent() {
+        return content;
+    }
+
+    public void setContent(BigInteger content) {
+        this.content = content;
     }
 }
