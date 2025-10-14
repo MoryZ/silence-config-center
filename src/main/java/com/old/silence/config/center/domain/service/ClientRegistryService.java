@@ -1,11 +1,12 @@
 package com.old.silence.config.center.domain.service;
 
+import jakarta.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.old.silence.config.center.domain.service.support.ClientInfo;
 
-import javax.annotation.PostConstruct;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;

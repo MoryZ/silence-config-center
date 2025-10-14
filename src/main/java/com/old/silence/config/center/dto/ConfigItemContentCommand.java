@@ -1,8 +1,7 @@
 package com.old.silence.config.center.dto;
 
 
-
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 public class ConfigItemContentCommand{
 
