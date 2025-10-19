@@ -1,5 +1,6 @@
 package com.old.silence.config.center.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.old.silence.config.center.domain.model.ConfigItem;
 import com.old.silence.config.center.enums.ConfigItemFormatType;
 import com.old.silence.config.center.enums.ConfigItemType;
@@ -21,6 +22,11 @@ public class ConfigItemVo {
     public ConfigItemVo(ConfigItem configItem, List<String> ips) {
         this.ips = ips;
         this.configItem = configItem;
+    }
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    public BigInteger getId() {
+        return configItem.getId();
     }
 
     public List<String> getIps() {

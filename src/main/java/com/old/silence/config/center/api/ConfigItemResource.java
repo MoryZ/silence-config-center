@@ -108,12 +108,12 @@ public class ConfigItemResource {
     public void update(@PathVariable BigInteger id, @RequestBody ConfigItemCommand configItemCommand) {
         var configItem = configItemMapper.convert(configItemCommand);
         configItem.setId(id);
-        configItemRepository.update(configItem);
+        configItemRepository.update(configItem, configItemCommand.getOperationType());
     }
 
     @PutMapping("/configItems/{id}/content")
     public int updateConfigContent(@PathVariable BigInteger id, @RequestBody ConfigItemContentCommand command) {
-        return configItemRepository.updateContentById(command.getContent(), id);
+        return configItemRepository.updateContentById(command.getContent(), command.getOperationType(), id);
     }
 
     @GetMapping("/configItems/subscribe")
