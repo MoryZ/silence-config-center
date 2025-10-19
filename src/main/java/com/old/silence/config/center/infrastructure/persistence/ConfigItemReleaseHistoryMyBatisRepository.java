@@ -53,8 +53,6 @@ public class ConfigItemReleaseHistoryMyBatisRepository implements ConfigItemRele
         return configItemReleaseHistoryDao.selectPage(page, queryWrapper);
     }
 
-
-
     @Override
     public void create(ConfigItemReleaseHistory configItemReleaseHistory) {
         configItemReleaseHistoryDao.insert(configItemReleaseHistory);

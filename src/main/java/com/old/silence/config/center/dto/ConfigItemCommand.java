@@ -3,6 +3,7 @@ package com.old.silence.config.center.dto;
 import com.old.silence.config.center.enums.ConfigItemFormatType;
 import com.old.silence.config.center.enums.ConfigItemType;
 import com.old.silence.config.center.enums.NameSpaceStatus;
+import com.old.silence.config.center.enums.OperationType;
 
 import java.math.BigInteger;
 
@@ -34,6 +35,8 @@ public class ConfigItemCommand {
     private String content;
 
     private String md5;
+
+    private OperationType operationType;
 
     public BigInteger getConfigEnvironmentId() {
         return configEnvironmentId;
@@ -97,5 +100,13 @@ public class ConfigItemCommand {
 
     public void setMd5(String md5) {
         this.md5 = md5;
+    }
+
+    public OperationType getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(OperationType operationType) {
+        this.operationType = operationType;
     }
 }

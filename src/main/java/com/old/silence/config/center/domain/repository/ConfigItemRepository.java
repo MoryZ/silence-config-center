@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.old.silence.config.center.domain.model.ConfigItem;
 import com.old.silence.config.center.enums.ConfigItemFormatType;
+import com.old.silence.config.center.enums.OperationType;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -34,15 +35,17 @@ public interface ConfigItemRepository {
     /**
      * 更新配置项
      * @param configItem 配置项信息
+     * @param operationType 操作类型
      */
-    int update(ConfigItem configItem);
+    int update(ConfigItem configItem, OperationType operationType);
 
     /**
      * 更新配置项
      * @param content 新配置项信息
+     * @param operationType 操作类型
      * @param id 配置项主键
      */
-    int updateContentById(String content, BigInteger id);
+    int updateContentById(String content, OperationType operationType, BigInteger id);
 
     /**
      * 删除配置项

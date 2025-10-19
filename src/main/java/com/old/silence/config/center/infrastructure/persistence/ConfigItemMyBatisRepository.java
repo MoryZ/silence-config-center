@@ -4,11 +4,16 @@ import org.springframework.stereotype.Repository;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.old.silence.config.center.api.ConfigItemHistoryResource;
 import com.old.silence.config.center.domain.model.ConfigItem;
+import com.old.silence.config.center.domain.model.ConfigItemHistory;
+import com.old.silence.config.center.domain.repository.ConfigItemHistoryRepository;
 import com.old.silence.config.center.domain.repository.ConfigItemRepository;
 import com.old.silence.config.center.enums.ConfigItemFormatType;
 import com.old.silence.config.center.enums.NameSpaceStatus;
+import com.old.silence.config.center.enums.OperationType;
 import com.old.silence.config.center.infrastructure.persistence.dao.ConfigItemDao;
+import com.old.silence.config.center.infrastructure.persistence.dao.ConfigItemHistoryDao;
 import com.old.silence.config.center.util.Md5Utils;
 
 import java.math.BigInteger;
@@ -21,8 +26,10 @@ import java.util.List;
 public class ConfigItemMyBatisRepository implements ConfigItemRepository {
 
     private final ConfigItemDao configItemDao;
-    public ConfigItemMyBatisRepository(ConfigItemDao configItemDao) {
+    private final ConfigItemHistoryRepository configItemHistoryRepository;
+    public ConfigItemMyBatisRepository(ConfigItemDao configItemDao, ConfigItemHistoryRepository configItemHistoryRepository1) {
         this.configItemDao = configItemDao;
+        this.configItemHistoryRepository = configItemHistoryRepository1;
     }
 
     @Override
@@ -50,13 +57,23 @@ public class ConfigItemMyBatisRepository implements ConfigItemRepository {
     }
 
     @Override
-    public int update(ConfigItem configItem) {
+    public int update(ConfigItem configItem, OperationType operationType) {
         configItem.setMd5(Md5Utils.md5(configItem.getContent()));
-        return configItemDao.updateById(configItem);
+        var rowsAffected = configItemDao.updateById(configItem);
+
+        var configItemHistory = new ConfigItemHistory();
+        configItemHistory.setConfigItemId(configItem.getId());
+        configItemHistory.setContent(configItem.getContent());
+        configItemHistory.setOldContent(configItem.getOldContent());
+
+
+        configItemHistory.setOperationType(operationType);
+        configItemHistoryRepository.create(configItemHistory);
+        return rowsAffected;
     }
 
     @Override
-    public int updateContentById(String content, BigInteger id) {
+    public int updateContentById(String content, OperationType operationType, BigInteger id) {
 
         String oldContent = findById(id).getContent();
         UpdateWrapper<ConfigItem> updateWrapper = new UpdateWrapper<>();
@@ -64,7 +81,15 @@ public class ConfigItemMyBatisRepository implements ConfigItemRepository {
                 .set("old_content", oldContent)
                 .set("content", content)
                 .set("md5", Md5Utils.md5(content));
-        return configItemDao.update(null, updateWrapper);
+
+        var configItemHistory = new ConfigItemHistory();
+        configItemHistory.setConfigItemId(id);
+        configItemHistory.setContent(content);
+        configItemHistory.setOldContent(oldContent);
+        configItemHistory.setOperationType(operationType);
+        configItemHistoryRepository.create(configItemHistory);
+
+        return configItemDao.update(updateWrapper);
     }
 
     @Override
