@@ -6,17 +6,16 @@ import com.old.silence.core.enums.DescribedEnumValue;
 /**
  * @author moryzang
  */
-public enum NameSpaceStatus implements DescribedEnumValue<Byte> {
+public enum DistributionStrategy implements DescribedEnumValue<Byte> {
 
-    SAVED(1, "已保存"),
-    PUBLISHING(2, "发布中"),
-    PUBLISHED(3, "已发布"),
+    IMMEDIATE_RELEASE(1, "立即下发"),
+    SCHEDULED_RELEASE(2, "自定义时间"),
     ;
 
     private final Byte value;
     private final String description;
 
-    NameSpaceStatus(int value, String description) {
+    DistributionStrategy(int value, String description) {
            this.value = (byte) value;
            this.description = description;
     }

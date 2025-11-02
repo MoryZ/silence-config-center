@@ -39,13 +39,11 @@ public class ConfigEnvironmentMyBatisRepository implements ConfigEnvironmentRepo
 
     @Override
     public int update(ConfigEnvironment configEnvironment) {
-        configEnvironmentDao.updateById(configEnvironment);
-        return 0;
+        return configEnvironmentDao.updateById(configEnvironment);
     }
 
     @Override
     public int deleteById(BigInteger id) {
-        configEnvironmentDao.deleteById(id);
-        return 0;
+        return configEnvironmentDao.deleteById(id);
     }
 }

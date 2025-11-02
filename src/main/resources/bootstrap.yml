@@ -1,0 +1,12 @@
+server:
+  port: 8097
+
+spring:
+  application:
+    name: config-service
+
+platform:
+  system:
+    identifier: CC
+
+

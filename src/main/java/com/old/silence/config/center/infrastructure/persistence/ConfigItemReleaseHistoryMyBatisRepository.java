@@ -7,6 +7,7 @@ import com.old.silence.config.center.domain.model.ConfigItemReleaseHistory;
 import com.old.silence.config.center.domain.repository.ConfigItemReleaseHistoryRepository;
 import com.old.silence.config.center.domain.service.LongPollingService;
 import com.old.silence.config.center.enums.EventType;
+import com.old.silence.config.center.enums.NameSpaceStatus;
 import com.old.silence.config.center.infrastructure.persistence.dao.ConfigItemDao;
 import com.old.silence.config.center.infrastructure.persistence.dao.ConfigItemReleaseHistoryDao;
 
@@ -37,11 +38,12 @@ public class ConfigItemReleaseHistoryMyBatisRepository implements ConfigItemRele
         // 发布历史记录表
         configItemReleaseHistoryDao.insert(configItemReleaseHistory);
 
-        //广播通知
         var configReleaseVo = configItemDao.findReleaseInfoById(configItemReleaseHistory.getConfigItemId());
-
+        //广播通知
         longPollingService.notifySubscriber(EventType.PUBLISH, configReleaseVo.getEnv(), configReleaseVo.getCode(),
                 configReleaseVo.getNamespaceId(), configItemReleaseHistory.getContent());
+
+        configItemDao.updateNamespaceStatusById(NameSpaceStatus.PUBLISHED, configItemReleaseHistory.getConfigItemId());
     }
     @Override
     public ConfigItemReleaseHistory findById(BigInteger id) {

@@ -1,11 +1,9 @@
 spring:
-  application:
-    name: config-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://115.190.196.117:3306/silence-platform?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
-    username: silenceopr
-    password: 520loveTmx@#
+    url: jdbc:mysql://localhost:3306/silence-platform?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: 123456
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       connection-timeout: 30000
@@ -25,3 +23,9 @@ spring:
         server-addr: localhost:8848
         username: nacos
         password: nacos
+silence:
+  auth:
+    center:
+      security:
+        api:
+          white-list: /api/v1/configItems/**,/api/v1/configItemReleaseHistories/release,/api/v1/client/**,/api/v1/configCyberarkInfos/pwd/getPassword

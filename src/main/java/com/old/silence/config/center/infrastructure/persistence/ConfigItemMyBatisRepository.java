@@ -44,7 +44,7 @@ public class ConfigItemMyBatisRepository implements ConfigItemRepository {
 
     @Override
     public String findByNameSpaceIdAndEnvNameAndComponentCodeAndFormatType(String namespaceId, String env, String componentCode, ConfigItemFormatType type) {
-        return configItemDao.findByNameSpaceIdAndEnvNameAndComponentCodeAndFormatType(namespaceId, env, componentCode, type);
+        return configItemDao.findByNameSpaceIdAndEnvNameAndComponentCodeAndFormatType(namespaceId, env, componentCode, type, NameSpaceStatus.PUBLISHED);
     }
 
 
@@ -77,10 +77,11 @@ public class ConfigItemMyBatisRepository implements ConfigItemRepository {
 
         String oldContent = findById(id).getContent();
         UpdateWrapper<ConfigItem> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("id",id)
-                .set("old_content", oldContent)
-                .set("content", content)
-                .set("md5", Md5Utils.md5(content));
+        updateWrapper.lambda().eq(ConfigItem::getId,id)
+                .set(ConfigItem::getOldContent, oldContent)
+                .set(ConfigItem::getContent, content)
+                .set(ConfigItem::getNamespaceStatus, NameSpaceStatus.SAVED)
+                .set(ConfigItem::getMd5, Md5Utils.md5(content));
 
         var configItemHistory = new ConfigItemHistory();
         configItemHistory.setConfigItemId(id);
