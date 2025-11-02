@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.old.silence.config.center.api.assembler.ConfigItemMapper;
+import com.old.silence.config.center.api.config.annotation.SignatureAuth;
 import com.old.silence.config.center.domain.model.ConfigItem;
 import com.old.silence.config.center.domain.repository.ConfigEnvironmentRepository;
 import com.old.silence.config.center.domain.repository.ConfigItemRepository;
@@ -53,6 +54,7 @@ public class ConfigItemResource {
         this.clientRegistryService = clientRegistryService;
     }
 
+    @SignatureAuth
     @RequestMapping(value = "/configItems", params = {"!pageNo", "!pageSize", "namespace", "env", "componentCode", "type"})
     public String queryConfigItem(
             @RequestParam String namespace,
@@ -116,6 +118,7 @@ public class ConfigItemResource {
         return configItemRepository.updateContentById(command.getContent(), command.getOperationType(), id);
     }
 
+    @SignatureAuth
     @GetMapping("/configItems/subscribe")
     public void subscribe(String env, String componentCode, String namespace, HttpServletRequest request, HttpServletResponse response) {
         longPollingService.subscribeConfig(env, componentCode, namespace, request, response);

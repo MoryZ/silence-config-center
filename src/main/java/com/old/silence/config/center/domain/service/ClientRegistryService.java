@@ -46,13 +46,13 @@ public class ClientRegistryService {
                 k -> ConcurrentHashMap.newKeySet()
         );
 
-        // 移除同IP同进程的旧记录（处理重启场景）
+        // 移除同IP同端口的旧记录（处理重启场景）
         clients.removeIf(existing ->
-                existing.isSameInstance(newClient)
-                        && !existing.getClientId().equals(newClient.getClientId())
+                existing.isSameInstance(newClient)  // 基于IP、端口、进程ID等判断
         );
 
         clients.add(newClient);
+        logger.debug("Registered client {} for config key {}", newClient, configKey);
     }
 
     public synchronized void unregisterClient(String clientId) {

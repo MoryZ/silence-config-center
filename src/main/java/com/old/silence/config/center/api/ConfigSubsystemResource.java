@@ -1,6 +1,7 @@
 package com.old.silence.config.center.api;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,16 +32,15 @@ public class ConfigSubsystemResource {
         this.configSubsystemMapper = configSubsystemMapper;
     }
 
-    @RequestMapping(value = "/configSubsystems",params  = {"pageNo", "pageSize"})
+    @GetMapping(value = "/configSubsystems",params  = {"pageNo", "pageSize"})
     public Page<ConfigSubsystem> queryConfigItem(Page<ConfigSubsystem> page, ConfigSubsystemQuery configSubsystemQuery){
         var queryWrapper = QueryWrapperConverter.convert(configSubsystemQuery, ConfigSubsystem.class);
         return configSubsystemRepository.query(page, queryWrapper);
     }
 
-    @RequestMapping(value = "/configSubsystems",params  = {"!pageNo", "!pageSize"})
+    @GetMapping(value = "/configSubsystems",params  = {"!pageNo", "!pageSize"})
     public List<ConfigSubsystem> queryConfigItem(ConfigSubsystemQuery configSubsystemQuery){
         var queryWrapper = QueryWrapperConverter.convert(configSubsystemQuery, ConfigSubsystem.class);
-
         return configSubsystemRepository.query(queryWrapper);
     }
 
