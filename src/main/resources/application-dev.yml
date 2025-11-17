@@ -12,7 +12,7 @@ spring:
       auto-commit: true
       idle-timeout: 600000               # 改为10分钟
       max-lifetime: 1200000              # 建议改为20分钟
-      pool-name: silence_auth_center_pool
+      pool-name: silence_config_center_pool
       connection-test-query: SELECT 1    # MySQL连接测试语句
       validation-timeout: 5000           # 验证超时5秒
       leak-detection-threshold: 60000    # 泄漏检测60秒

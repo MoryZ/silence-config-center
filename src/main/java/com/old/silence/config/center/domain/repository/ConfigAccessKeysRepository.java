@@ -10,6 +10,13 @@ public interface ConfigAccessKeysRepository {
 
     ConfigAccessKeys findByAccessKey(String accessKey);
 
+    /**
+     * 根据组件编码查询访问密钥
+     * @param componentCode 组件编码
+     * @return 访问密钥
+     */
+    ConfigAccessKeys findByComponentCode(String componentCode);
+
     Page<ConfigAccessKeys> query(Page<ConfigAccessKeys> page, QueryWrapper<ConfigAccessKeys> queryWrapper);
 
     /**
