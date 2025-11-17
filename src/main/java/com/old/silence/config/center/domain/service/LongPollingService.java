@@ -5,27 +5,21 @@ import jakarta.annotation.PreDestroy;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.AsyncEvent;
 import jakarta.servlet.AsyncListener;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import com.old.silence.config.center.domain.repository.ConfigItemRepository;
 import com.old.silence.config.center.domain.service.event.EventStrategyFactory;
 import com.old.silence.config.center.enums.EventType;
-import com.old.silence.json.JacksonMapper;
 
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author moryzang
@@ -33,22 +27,20 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class LongPollingService {
 
+    private static final Logger logger = LoggerFactory.getLogger(LongPollingService.class);
     private final Map<String, AsyncContext> contextsMap = new ConcurrentHashMap<>();
     private final EventStrategyFactory eventStrategyFactory;
-    private final ConfigItemRepository configItemRepository;
     private final ScheduledExecutorService timeoutChecker = new ScheduledThreadPoolExecutor(1);
 
-    public LongPollingService(EventStrategyFactory eventStrategyFactory,
-                              ConfigItemRepository configItemRepository) {
+    public LongPollingService(EventStrategyFactory eventStrategyFactory) {
         this.eventStrategyFactory = eventStrategyFactory;
-        this.configItemRepository = configItemRepository;
     }
 
     /**
      * 添加订阅者
      */
     public void subscribeConfig(String group, String appId, String namespace,
-                                HttpServletRequest request, HttpServletResponse response) {
+                                HttpServletRequest request) {
         String key = String.join("-", appId, group, namespace);
         AsyncContext context = request.startAsync();
 
@@ -90,12 +82,13 @@ public class LongPollingService {
     /**
      * 通知监听当前配置文件的请求，并进行响应
      */
-    public void notifySubscriber(EventType eventType, String env, String componentId, String namespace, String content) {
+    public boolean notifySubscriber(EventType eventType, String env, String componentId, String namespace, String content) {
         String configKey = String.join("-", componentId, env, namespace);
         AsyncContext context = contextsMap.remove(configKey); // 获取并立即移除
 
         if (Objects.isNull(context)) {
-            return;
+            logger.debug("未找到监听者，跳过通知 [{}]", configKey);
+            return false;
         }
 
         try {
@@ -104,10 +97,12 @@ public class LongPollingService {
                     .handleEvent(context, content, configKey);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("通知订阅者失败 [{}]", configKey, e);
             // 发生异常时确保完成上下文
             safeCompleteContext(context);
+            return false;
         }
+        return true;
         // 移除 finally 块，避免重复 complete
     }
 

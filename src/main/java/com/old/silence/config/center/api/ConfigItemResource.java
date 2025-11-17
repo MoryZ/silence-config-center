@@ -1,7 +1,6 @@
 package com.old.silence.config.center.api;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -120,8 +119,8 @@ public class ConfigItemResource {
 
     @SignatureAuth
     @GetMapping("/configItems/subscribe")
-    public void subscribe(String env, String componentCode, String namespace, HttpServletRequest request, HttpServletResponse response) {
-        longPollingService.subscribeConfig(env, componentCode, namespace, request, response);
+    public void subscribe(String env, String componentCode, String namespace, HttpServletRequest request) {
+        longPollingService.subscribeConfig(env, componentCode, namespace, request);
     }
 
     @DeleteMapping("/configItems/{id}")
@@ -129,7 +128,7 @@ public class ConfigItemResource {
         configItemRepository.deleteById(id);
     }
 
-    @DeleteMapping("/configItems/batch")
+    @DeleteMapping("/configItems/batchDelete")
     public void batchDeleteConfig(@RequestBody List<BigInteger> ids) {
         configItemRepository.batchDeleteConfig(ids);
     }

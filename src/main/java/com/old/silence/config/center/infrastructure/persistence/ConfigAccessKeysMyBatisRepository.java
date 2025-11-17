@@ -1,8 +1,8 @@
 package com.old.silence.config.center.infrastructure.persistence;
 
 import org.springframework.stereotype.Repository;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.old.silence.config.center.domain.model.ConfigAccessKeys;
@@ -26,6 +26,15 @@ public class ConfigAccessKeysMyBatisRepository implements ConfigAccessKeysReposi
     @Override
     public ConfigAccessKeys findByAccessKey(String accessKey) {
         return configAccessKeysDao.findByAccessKey(accessKey, Boolean.TRUE);
+    }
+
+    @Override
+    public ConfigAccessKeys findByComponentCode(String componentCode) {
+        LambdaQueryWrapper<ConfigAccessKeys> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ConfigAccessKeys::getComponentCode, componentCode)
+                .eq(ConfigAccessKeys::getEnabled, Boolean.TRUE)
+                .last("limit 1");
+        return configAccessKeysDao.selectOne(queryWrapper);
     }
 
 
