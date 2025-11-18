@@ -22,6 +22,7 @@ public class ConfigCyberarkInfoMapperImpl implements ConfigCyberarkInfoMapper {
         configCyberarkInfo.setCyberarkObject( command.getCyberarkObject() );
         configCyberarkInfo.setEncryptedValue( command.getEncryptedValue() );
         configCyberarkInfo.setComponentCode( command.getComponentCode() );
+        configCyberarkInfo.setAppKey( command.getAppKey() );
         configCyberarkInfo.setSafe( command.getSafe() );
         configCyberarkInfo.setFolder( command.getFolder() );
         configCyberarkInfo.setDescription( command.getDescription() );

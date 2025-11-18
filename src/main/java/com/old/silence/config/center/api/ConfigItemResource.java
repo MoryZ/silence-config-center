@@ -1,6 +1,7 @@
 package com.old.silence.config.center.api;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,9 +74,9 @@ public class ConfigItemResource {
         if (CollectionUtils.isNotEmpty(configItemPage.getRecords())) {
             CollectionUtils.firstElement(configItemPage.getRecords())
                     .map(ConfigItem::getConfigEnvironmentId)
-                    .ifPresent(configEnvironmentId -> {
-                        configEnvironmentVo.set(configEnvironmentRepository.findById(configEnvironmentId));
-                    });
+                    .ifPresent(configEnvironmentId ->
+                            configEnvironmentVo.set(configEnvironmentRepository.findById(configEnvironmentId))
+                    );
 
         }
 
@@ -119,8 +120,8 @@ public class ConfigItemResource {
 
     @SignatureAuth
     @GetMapping("/configItems/subscribe")
-    public void subscribe(String env, String componentCode, String namespace, HttpServletRequest request) {
-        longPollingService.subscribeConfig(env, componentCode, namespace, request);
+    public void subscribe(String env, String componentCode, String namespace, HttpServletRequest request, HttpServletResponse response) {
+        longPollingService.subscribeConfig(env, componentCode, namespace, request, response);
     }
 
     @DeleteMapping("/configItems/{id}")

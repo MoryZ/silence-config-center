@@ -134,7 +134,7 @@ public class SignatureAuthInterceptor implements HandlerInterceptor {
 
     private void validateHeaders(String accessKey, String timestampStr,
                                  String nonce, String signature) {
-        log.warn("1:{},2:{},3:{},4:{}", accessKey, timestampStr, nonce, signature);
+        log.info("accessKey:{},timestampStr:{},nonce:{},signature:{}", accessKey, timestampStr, nonce, signature);
         if (StringUtils.isAnyBlank(accessKey, timestampStr, nonce, signature)) {
             throw CommonErrors.INVALID_PARAMETER.createException("缺少必要的认证头信息");
         }

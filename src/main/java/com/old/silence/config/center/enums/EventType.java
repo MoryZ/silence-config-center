@@ -22,7 +22,6 @@ public enum EventType implements DescribedEnumValue<Byte> {
      */
     IGNORE(3,"IGNORE"),
     ;
-    ;
 
     private final Byte value;
     private final String description;

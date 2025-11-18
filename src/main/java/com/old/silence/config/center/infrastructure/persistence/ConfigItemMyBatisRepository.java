@@ -4,7 +4,6 @@ import org.springframework.stereotype.Repository;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.old.silence.config.center.api.ConfigItemHistoryResource;
 import com.old.silence.config.center.domain.model.ConfigItem;
 import com.old.silence.config.center.domain.model.ConfigItemHistory;
 import com.old.silence.config.center.domain.repository.ConfigItemHistoryRepository;
@@ -13,7 +12,6 @@ import com.old.silence.config.center.enums.ConfigItemFormatType;
 import com.old.silence.config.center.enums.NameSpaceStatus;
 import com.old.silence.config.center.enums.OperationType;
 import com.old.silence.config.center.infrastructure.persistence.dao.ConfigItemDao;
-import com.old.silence.config.center.infrastructure.persistence.dao.ConfigItemHistoryDao;
 import com.old.silence.config.center.util.Md5Utils;
 
 import java.math.BigInteger;
