@@ -40,7 +40,7 @@ public class LongPollingService {
      * 添加订阅者
      */
     public void subscribeConfig(String group, String appId, String namespace,
-                                HttpServletRequest request) {
+                                HttpServletRequest request, HttpServletResponse response) {
         String key = String.join("-", appId, group, namespace);
         AsyncContext context = request.startAsync();
 
@@ -57,8 +57,8 @@ public class LongPollingService {
             @Override
             public void onTimeout(AsyncEvent event) {
                 try {
-                    // 返回304状态码表示未修改
-                    ((HttpServletResponse) context.getResponse()).setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                    // 返回 304 状态码表示未修改
+                    response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                 } catch (Exception e) {
                     // 忽略异常
                 } finally {
@@ -73,7 +73,9 @@ public class LongPollingService {
             }
 
             @Override
-            public void onStartAsync(AsyncEvent event) {}
+            public void onStartAsync(AsyncEvent event) {
+
+            }
         });
 
         contextsMap.put(key, context);
@@ -116,7 +118,7 @@ public class LongPollingService {
 
         try {
             if (!context.getResponse().isCommitted()) {
-                // 返回500错误
+                // 返回 500 错误
                 ((HttpServletResponse) context.getResponse()).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
             context.complete();

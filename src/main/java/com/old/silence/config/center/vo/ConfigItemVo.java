@@ -13,24 +13,11 @@ import java.util.List;
 /**
  * @author MurrayZhang
  */
-public class ConfigItemVo {
-
-    private final List<String> ips;
-
-    private final ConfigItem configItem;
-
-    public ConfigItemVo(ConfigItem configItem, List<String> ips) {
-        this.ips = ips;
-        this.configItem = configItem;
-    }
+public record ConfigItemVo(ConfigItem configItem, List<String> ips) {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     public BigInteger getId() {
         return configItem.getId();
-    }
-
-    public List<String> getIps() {
-        return ips;
     }
 
     public BigInteger getConfigEnvironmentId() {

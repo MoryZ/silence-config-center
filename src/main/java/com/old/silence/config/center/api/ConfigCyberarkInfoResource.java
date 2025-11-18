@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.old.silence.config.center.api.assembler.ConfigCyberarkInfoMapper;
-import com.old.silence.config.center.domain.ConfigCyberarkInfoService;
+import com.old.silence.config.center.domain.service.ConfigCyberarkInfoService;
 import com.old.silence.config.center.domain.model.ConfigCyberarkInfo;
 import com.old.silence.config.center.domain.repository.ConfigCyberarkInfoRepository;
 import com.old.silence.config.center.dto.ConfigCyberarkInfoCommand;

@@ -20,6 +20,11 @@ public class ConfigCyberarkInfoCommand {
      */
     private String componentCode;
 
+    /**
+     * appKey
+     */
+    private String appKey;
+
     private String safe;
 
     private String folder;
@@ -56,6 +61,14 @@ public class ConfigCyberarkInfoCommand {
 
     public void setComponentCode(String componentCode) {
         this.componentCode = componentCode;
+    }
+
+    public String getAppKey() {
+        return appKey;
+    }
+
+    public void setAppKey(String appKey) {
+        this.appKey = appKey;
     }
 
     public String getSafe() {

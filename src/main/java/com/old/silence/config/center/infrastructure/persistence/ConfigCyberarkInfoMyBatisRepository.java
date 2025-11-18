@@ -4,7 +4,6 @@ import org.springframework.stereotype.Repository;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.old.silence.config.center.domain.model.ConfigAccessKeys;
 import com.old.silence.config.center.domain.model.ConfigCyberarkInfo;
 import com.old.silence.config.center.domain.repository.ConfigCyberarkInfoRepository;
 import com.old.silence.config.center.infrastructure.persistence.dao.ConfigCyberarkInfoDao;

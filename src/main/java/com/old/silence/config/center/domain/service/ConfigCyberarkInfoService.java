@@ -1,23 +1,16 @@
-package com.old.silence.config.center.domain;
-
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
+package com.old.silence.config.center.domain.service;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import com.old.silence.config.center.domain.model.ConfigAccessKeys;
 import com.old.silence.config.center.domain.model.ConfigCyberarkInfo;
 import com.old.silence.config.center.domain.repository.ConfigAccessKeysRepository;
 import com.old.silence.config.center.domain.repository.ConfigCyberarkInfoRepository;
 import com.old.silence.config.center.dto.ConfigCyberarkInfoRequest;
+import com.old.silence.config.center.util.AESUtils;
 import com.old.silence.config.center.vo.ConfigCyberarkInfoVo;
 import com.old.silence.core.context.CommonErrors;
 
-import java.nio.charset.StandardCharsets;
-import java.security.GeneralSecurityException;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -27,8 +20,7 @@ import java.util.UUID;
 @Service
 public class ConfigCyberarkInfoService {
 
-    private static final String AES_TRANSFORMATION = "AES/CBC/PKCS5Padding";
-    private static final byte[] IV = "pidms20180327!@#".getBytes(StandardCharsets.UTF_8);
+
 
     private final ConfigCyberarkInfoRepository configCyberarkInfoRepository;
     private final ConfigAccessKeysRepository configAccessKeysRepository;
@@ -123,22 +115,9 @@ public class ConfigCyberarkInfoService {
     }
 
     private String encryptValueIfNecessary(ConfigCyberarkInfo configCyberarkInfo) {
-        ConfigAccessKeys accessKeys = configAccessKeysRepository.findByComponentCode(configCyberarkInfo.getComponentCode());
-        if (accessKeys == null || StringUtils.isBlank(accessKeys.getSecretKey())) {
-            throw CommonErrors.DATA_NOT_EXIST.createException("appKey 未配置, componentCode=" + configCyberarkInfo.getComponentCode());
-        }
-        return encrypt(configCyberarkInfo.getEncryptedValue(), accessKeys.getSecretKey());
+
+        return AESUtils.encrypt(configCyberarkInfo.getEncryptedValue(), configCyberarkInfo.getAppKey());
     }
 
-    private String encrypt(String plainText, String appKey) {
-        try {
-            Cipher cipher = Cipher.getInstance(AES_TRANSFORMATION);
-            SecretKeySpec secretKeySpec = new SecretKeySpec(appKey.getBytes(StandardCharsets.UTF_8), "AES");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(IV));
-            byte[] encrypted = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
-            return Hex.encodeHexString(encrypted);
-        } catch (GeneralSecurityException e) {
-            throw CommonErrors.FATAL_ERROR.createException("加密失败");
-        }
-    }
+
 }
