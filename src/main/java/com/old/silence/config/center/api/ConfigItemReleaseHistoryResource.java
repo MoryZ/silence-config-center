@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.old.silence.config.center.api.config.annotation.SignatureAuth;
 import com.old.silence.data.commons.converter.QueryWrapperConverter;
 import com.old.silence.config.center.api.assembler.ConfigItemReleaseHistoryMapper;
 import com.old.silence.config.center.domain.model.ConfigItemReleaseHistory;
@@ -48,7 +47,6 @@ public class ConfigItemReleaseHistoryResource {
         configItemReleaseHistoryRepository.create(configItemReleaseHistory);
     }
 
-    @SignatureAuth
     @PutMapping("/configItemReleaseHistories/release")
     public void release(@RequestBody ConfigItemReleaseHistoryCommand configItemReleaseHistoryCommand) {
         var configItemReleaseHistory = configItemReleaseHistoryMapper.convert(configItemReleaseHistoryCommand);

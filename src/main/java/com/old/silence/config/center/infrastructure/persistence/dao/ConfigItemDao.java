@@ -12,6 +12,7 @@ import com.old.silence.config.center.enums.NameSpaceStatus;
 import com.old.silence.config.center.vo.ConfigReleaseVo;
 
 import java.math.BigInteger;
+import java.util.List;
 
 
 @Mapper
@@ -40,6 +41,10 @@ public interface ConfigItemDao extends BaseMapper<ConfigItem> {
     )
     ConfigReleaseVo findReleaseInfoById(BigInteger id);
 
+    int insertAll(List<ConfigItem> configItems);
+
     @Update("UPDATE config_item SET namespace_status = #{nameSpaceStatus} WHERE id = #{id} ")
     int updateNamespaceStatusById(NameSpaceStatus nameSpaceStatus, BigInteger id);
+
+    int updateAll(@Param("list") List<ConfigItem> configItems);
 }
