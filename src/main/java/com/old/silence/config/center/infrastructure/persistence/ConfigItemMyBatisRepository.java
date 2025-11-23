@@ -1,6 +1,7 @@
 package com.old.silence.config.center.infrastructure.persistence;
 
 import org.springframework.stereotype.Repository;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -31,13 +32,20 @@ public class ConfigItemMyBatisRepository implements ConfigItemRepository {
     }
 
     @Override
-    public Page<ConfigItem> query(Page<ConfigItem> page, QueryWrapper<ConfigItem> queryWrapper) {
+    public Page<ConfigItem> queryPage(Page<ConfigItem> page, QueryWrapper<ConfigItem> queryWrapper) {
         return configItemDao.selectPage(page, queryWrapper);
     }
 
     @Override
     public ConfigItem findById(BigInteger id) {
         return configItemDao.selectById(id);
+    }
+
+    @Override
+    public List<ConfigItem> findByConfigEnvironmentId(BigInteger configEnvironmentId) {
+        var lambdaQueryWrapper = new LambdaQueryWrapper<ConfigItem>();
+        lambdaQueryWrapper.eq(ConfigItem::getConfigEnvironmentId, configEnvironmentId);
+        return configItemDao.selectList(lambdaQueryWrapper);
     }
 
     @Override
@@ -55,6 +63,11 @@ public class ConfigItemMyBatisRepository implements ConfigItemRepository {
     }
 
     @Override
+    public int bulkCreate(List<ConfigItem> configItems) {
+        return configItemDao.insertAll(configItems);
+    }
+
+    @Override
     public int update(ConfigItem configItem, OperationType operationType) {
         configItem.setMd5(Md5Utils.md5(configItem.getContent()));
         var rowsAffected = configItemDao.updateById(configItem);
@@ -64,10 +77,14 @@ public class ConfigItemMyBatisRepository implements ConfigItemRepository {
         configItemHistory.setContent(configItem.getContent());
         configItemHistory.setOldContent(configItem.getOldContent());
 
-
         configItemHistory.setOperationType(operationType);
         configItemHistoryRepository.create(configItemHistory);
         return rowsAffected;
+    }
+
+    @Override
+    public int bulkUpdate(List<ConfigItem> configItems) {
+        return configItemDao.updateAll(configItems);
     }
 
     @Override

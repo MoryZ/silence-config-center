@@ -69,7 +69,7 @@ public class ConfigItemResource {
     public IPage<ConfigItemVo> query(Page<ConfigItem> page, ConfigItemQuery configItemQuery) {
 
         var queryWrapper = QueryWrapperConverter.convert(configItemQuery, ConfigItem.class);
-        var configItemPage = configItemRepository.query(page, queryWrapper);
+        var configItemPage = configItemRepository.queryPage(page, queryWrapper);
         AtomicReference<ConfigEnvironmentVo> configEnvironmentVo = new AtomicReference<>();
         if (CollectionUtils.isNotEmpty(configItemPage.getRecords())) {
             CollectionUtils.firstElement(configItemPage.getRecords())
