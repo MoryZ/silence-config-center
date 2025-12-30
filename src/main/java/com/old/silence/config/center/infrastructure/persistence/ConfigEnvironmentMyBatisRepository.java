@@ -28,6 +28,11 @@ public class ConfigEnvironmentMyBatisRepository implements ConfigEnvironmentRepo
     }
 
     @Override
+    public ConfigEnvironment findByConfigComponentIdAndName(BigInteger configComponentId, String environmentName) {
+        return configEnvironmentDao.findByConfigComponentIdAndName(configComponentId, environmentName);
+    }
+
+    @Override
     public ConfigEnvironmentVo findById(BigInteger id) {
         return configEnvironmentDao.findById(id);
     }

@@ -22,7 +22,7 @@ public class ConfigNamespaceResource {
 
     @PostMapping("/configNamespaces/clone")
     public Boolean clone(@RequestBody ConfigNamespaceCloneCommand configNamespaceCloneCommand) {
-        return configNamespaceService.clone(configNamespaceCloneCommand.getSourceEnvironmentId(), configNamespaceCloneCommand.getTargetEnvironmentId(),
+        return configNamespaceService.clone(configNamespaceCloneCommand.getSourceEnvironmentId(), configNamespaceCloneCommand.getTargetEnvironmentIds(),
                 configNamespaceCloneCommand.getCloneMode());
     }
 }
