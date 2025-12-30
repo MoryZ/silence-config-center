@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.old.silence.config.center.api.assembler.ConfigItemMapper;
 import com.old.silence.config.center.api.config.annotation.SignatureAuth;
+import com.old.silence.config.center.domain.model.ConfigEnvironment;
 import com.old.silence.config.center.domain.model.ConfigItem;
 import com.old.silence.config.center.domain.repository.ConfigEnvironmentRepository;
 import com.old.silence.config.center.domain.repository.ConfigItemRepository;
@@ -93,6 +94,12 @@ public class ConfigItemResource {
             }
 
         });
+    }
+
+    @GetMapping(value = "/configItems", params = {"!pageNo", "!pageSize", "configComponentId", "environmentName"})
+    public List<ConfigItem> query(@RequestParam BigInteger configComponentId, @RequestParam String environmentName) {
+        var configEnvironment = configEnvironmentRepository.findByConfigComponentIdAndName(configComponentId, environmentName);
+        return configItemRepository.findByConfigEnvironmentId(configEnvironment.getId());
     }
 
     @GetMapping("/configItems/{id}")

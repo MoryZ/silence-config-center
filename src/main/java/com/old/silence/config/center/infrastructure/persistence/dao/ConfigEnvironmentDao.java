@@ -22,4 +22,10 @@ public interface ConfigEnvironmentDao extends BaseMapper<ConfigEnvironment> {
     )
     ConfigEnvironmentVo findById(BigInteger id);
 
+    @Select(" SELECT config_component.code as 'componentCode', config_environment.name "
+            + " FROM config_environment "
+            + " WHERE config_environment.config_component_id = #{configComponentId} AND name = #{environmentName} "
+
+    )
+    ConfigEnvironment findByConfigComponentIdAndName(BigInteger configComponentId, String environmentName);
 }

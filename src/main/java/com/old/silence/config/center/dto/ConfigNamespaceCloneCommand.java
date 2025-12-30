@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import com.old.silence.config.center.enums.CloneMode;
 
 import java.math.BigInteger;
+import java.util.List;
 
 /**
  * @author moryzang
@@ -14,7 +15,7 @@ public class ConfigNamespaceCloneCommand {
     private BigInteger sourceEnvironmentId;
 
     @NotNull
-    private BigInteger targetEnvironmentId;
+    private List<BigInteger> targetEnvironmentIds;
 
     @NotNull
     private CloneMode cloneMode;
@@ -27,12 +28,12 @@ public class ConfigNamespaceCloneCommand {
         this.sourceEnvironmentId = sourceEnvironmentId;
     }
 
-    public BigInteger getTargetEnvironmentId() {
-        return targetEnvironmentId;
+    public List<BigInteger> getTargetEnvironmentIds() {
+        return targetEnvironmentIds;
     }
 
-    public void setTargetEnvironmentId(BigInteger targetEnvironmentId) {
-        this.targetEnvironmentId = targetEnvironmentId;
+    public void setTargetEnvironmentIds(List<BigInteger> targetEnvironmentIds) {
+        this.targetEnvironmentIds = targetEnvironmentIds;
     }
 
     public CloneMode getCloneMode() {
