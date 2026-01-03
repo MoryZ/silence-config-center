@@ -42,6 +42,13 @@ public class ConfigItemMyBatisRepository implements ConfigItemRepository {
     }
 
     @Override
+    public ConfigItem findByConfigEnvironmentIdAndNamespaceId(BigInteger configEnvironmentId, String namespaceId) {
+        var lambdaQueryWrapper = new LambdaQueryWrapper<ConfigItem>();
+        lambdaQueryWrapper.eq(ConfigItem::getConfigEnvironmentId, configEnvironmentId);
+        return configItemDao.selectOne(lambdaQueryWrapper);
+    }
+
+    @Override
     public List<ConfigItem> findByConfigEnvironmentId(BigInteger configEnvironmentId) {
         var lambdaQueryWrapper = new LambdaQueryWrapper<ConfigItem>();
         lambdaQueryWrapper.eq(ConfigItem::getConfigEnvironmentId, configEnvironmentId);
