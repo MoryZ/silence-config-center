@@ -32,6 +32,7 @@ import com.old.silence.core.util.CollectionUtils;
 import com.old.silence.data.commons.converter.QueryWrapperConverter;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -99,6 +100,9 @@ public class ConfigItemResource {
     @GetMapping(value = "/configItems", params = {"!pageNo", "!pageSize", "configComponentId", "environmentName"})
     public List<ConfigItem> query(@RequestParam BigInteger configComponentId, @RequestParam String environmentName) {
         var configEnvironment = configEnvironmentRepository.findByConfigComponentIdAndName(configComponentId, environmentName);
+        if (configEnvironment == null) {
+            return List.of();
+        }
         return configItemRepository.findByConfigEnvironmentId(configEnvironment.getId());
     }
 

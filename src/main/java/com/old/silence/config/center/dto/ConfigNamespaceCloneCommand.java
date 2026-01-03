@@ -1,5 +1,6 @@
 package com.old.silence.config.center.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import com.old.silence.config.center.enums.CloneMode;
 
@@ -14,7 +15,7 @@ public class ConfigNamespaceCloneCommand {
     @NotNull
     private BigInteger sourceEnvironmentId;
 
-    @NotNull
+    @NotEmpty
     private List<BigInteger> targetEnvironmentIds;
 
     @NotNull

@@ -29,7 +29,10 @@ public class ConfigEnvironmentMyBatisRepository implements ConfigEnvironmentRepo
 
     @Override
     public ConfigEnvironment findByConfigComponentIdAndName(BigInteger configComponentId, String environmentName) {
-        return configEnvironmentDao.findByConfigComponentIdAndName(configComponentId, environmentName);
+        QueryWrapper<ConfigEnvironment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(ConfigEnvironment::getConfigComponentId, configComponentId);
+        queryWrapper.lambda().eq(ConfigEnvironment::getName, environmentName);
+        return configEnvironmentDao.selectOne(queryWrapper);
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.old.silence.config.center.domain.service.ConfigNamespaceService;
 import com.old.silence.config.center.dto.ConfigNamespaceCloneCommand;
+import com.old.silence.config.center.dto.ConfigNamespaceSyncCommand;
 
 /**
  * @author moryzang
@@ -25,4 +26,12 @@ public class ConfigNamespaceResource {
         return configNamespaceService.clone(configNamespaceCloneCommand.getSourceEnvironmentId(), configNamespaceCloneCommand.getTargetEnvironmentIds(),
                 configNamespaceCloneCommand.getCloneMode());
     }
+
+    @PostMapping("/configNamespaces/sync")
+    public Boolean sync(@RequestBody ConfigNamespaceSyncCommand configNamespaceCloneCommand) {
+        return configNamespaceService.sync(configNamespaceCloneCommand.getSourceConfigItemId(), configNamespaceCloneCommand.getTargetEnvironmentId(),
+                configNamespaceCloneCommand.getTargetNamespaceIds(),
+                configNamespaceCloneCommand.getConflictStrategy());
+    }
+
 }

@@ -19,6 +19,14 @@ public interface ConfigItemRepository {
     ConfigItem findById(BigInteger id);
 
     /**
+     * 获取配置项
+     * @param configEnvironmentId 配置环境id
+     * @param namespaceId 命名空间
+     * @return 配置项
+     */
+    ConfigItem findByConfigEnvironmentIdAndNamespaceId(BigInteger configEnvironmentId, String namespaceId);
+
+    /**
      * 获取配置项列表
      * @param configEnvironmentId 配置环境id
      * @return 配置项列表

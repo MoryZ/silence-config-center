@@ -32,11 +32,12 @@ public class ConfigComponentResource {
         this.configComponentMapper = configComponentMapper;
     }
 
-    @GetMapping(value = "/configComponents", params = {"subsystemId"})
+    @GetMapping( "/configComponents")
     public List<ConfigComponent> query(ConfigComponentQuery query) {
         QueryWrapper<ConfigComponent> queryWrapper = QueryWrapperConverter.convert(query, ConfigComponent.class);
         return configComponentRepository.findBySubsystemId(queryWrapper);
     }
+
     @PostMapping("/configComponents")
     public void create(@RequestBody ConfigComponentCommand configComponentCommand) {
         var configComponent = configComponentMapper.convert(configComponentCommand);
