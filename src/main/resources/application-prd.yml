@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://115.190.196.117:3306/silence-platform?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
-    username: silenceopr
-    password: 520loveTmx@#
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       connection-timeout: 30000
@@ -20,9 +20,9 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: localhost:8848
-        username: nacos
-        password: nacos
+        server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
+        username: ${NACOS_USERNAME}
+        password: ${NACOS_PASSWORD}
 
 silence:
   auth:

@@ -60,7 +60,7 @@ public class LongPollingService {
                     // 返回 304 状态码表示未修改
                     response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                 } catch (Exception e) {
-                    // 忽略异常
+                    logger.warn("设置超时响应状态失败, key={}", key, e);
                 } finally {
                     context.complete();
                     contextsMap.remove(key, context);
@@ -123,9 +123,9 @@ public class LongPollingService {
             }
             context.complete();
         } catch (IllegalStateException e) {
-            // 上下文已经完成，忽略
+            logger.debug("上下文已完成，跳过重复完成操作");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("安全完成异步上下文失败", e);
         }
     }
 
@@ -142,7 +142,7 @@ public class LongPollingService {
                 }
                 context.complete();
             } catch (Exception e) {
-                // 忽略异常
+                logger.warn("应用关闭时清理异步上下文失败", e);
             }
         });
         contextsMap.clear();

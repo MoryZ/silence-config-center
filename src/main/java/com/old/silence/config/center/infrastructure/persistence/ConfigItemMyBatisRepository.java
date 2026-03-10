@@ -14,6 +14,7 @@ import com.old.silence.config.center.enums.NameSpaceStatus;
 import com.old.silence.config.center.enums.OperationType;
 import com.old.silence.config.center.infrastructure.persistence.dao.ConfigItemDao;
 import com.old.silence.config.center.util.Md5Utils;
+import com.old.silence.core.context.CommonErrors;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -45,6 +46,7 @@ public class ConfigItemMyBatisRepository implements ConfigItemRepository {
     public ConfigItem findByConfigEnvironmentIdAndNamespaceId(BigInteger configEnvironmentId, String namespaceId) {
         var lambdaQueryWrapper = new LambdaQueryWrapper<ConfigItem>();
         lambdaQueryWrapper.eq(ConfigItem::getConfigEnvironmentId, configEnvironmentId);
+        lambdaQueryWrapper.eq(ConfigItem::getNamespaceId, namespaceId);
         return configItemDao.selectOne(lambdaQueryWrapper);
     }
 
@@ -96,8 +98,11 @@ public class ConfigItemMyBatisRepository implements ConfigItemRepository {
 
     @Override
     public int updateContentById(String content, OperationType operationType, BigInteger id) {
-
-        String oldContent = findById(id).getContent();
+        var configItem = findById(id);
+        if (configItem == null) {
+            throw CommonErrors.DATA_NOT_EXIST.createException("configItemId=" + id);
+        }
+        String oldContent = configItem.getContent();
         UpdateWrapper<ConfigItem> updateWrapper = new UpdateWrapper<>();
         updateWrapper.lambda().eq(ConfigItem::getId,id)
                 .set(ConfigItem::getOldContent, oldContent)

@@ -113,7 +113,7 @@ public class SignatureAuthInterceptor implements HandlerInterceptor {
             // 8. 缓存nonce（验证通过后才缓存）
             nonceManager.cacheNonce(nonce);
 
-            log.debug("签名认证通过: accessKey={}, componentCode={}", accessKey, configAccessKeys.getComponentCode());
+            log.debug("签名认证通过: accessKey={}, componentCode={}", maskSensitive(accessKey), configAccessKeys.getComponentCode());
             return true;
 
         } catch (AuthException e) {
@@ -134,7 +134,7 @@ public class SignatureAuthInterceptor implements HandlerInterceptor {
 
     private void validateHeaders(String accessKey, String timestampStr,
                                  String nonce, String signature) {
-        log.info("accessKey:{},timestampStr:{},nonce:{},signature:{}", accessKey, timestampStr, nonce, signature);
+        log.info("签名请求头校验: accessKey={}, timestamp={}", maskSensitive(accessKey), timestampStr);
         if (StringUtils.isAnyBlank(accessKey, timestampStr, nonce, signature)) {
             throw CommonErrors.INVALID_PARAMETER.createException("缺少必要的认证头信息");
         }
@@ -193,5 +193,15 @@ public class SignatureAuthInterceptor implements HandlerInterceptor {
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getRequestURI() : "");
 
         response.getWriter().write(new ObjectMapper().writeValueAsString(error));
+    }
+
+    private String maskSensitive(String value) {
+        if (StringUtils.isBlank(value)) {
+            return "***";
+        }
+        if (value.length() <= 4) {
+            return "***";
+        }
+        return value.substring(0, 2) + "***" + value.substring(value.length() - 2);
     }
 }

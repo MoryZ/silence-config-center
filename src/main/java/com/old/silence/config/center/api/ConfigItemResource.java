@@ -16,7 +16,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.old.silence.config.center.api.assembler.ConfigItemMapper;
 import com.old.silence.config.center.api.config.annotation.SignatureAuth;
-import com.old.silence.config.center.domain.model.ConfigEnvironment;
 import com.old.silence.config.center.domain.model.ConfigItem;
 import com.old.silence.config.center.domain.repository.ConfigEnvironmentRepository;
 import com.old.silence.config.center.domain.repository.ConfigItemRepository;
@@ -32,7 +31,6 @@ import com.old.silence.core.util.CollectionUtils;
 import com.old.silence.data.commons.converter.QueryWrapperConverter;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -57,7 +55,7 @@ public class ConfigItemResource {
     }
 
     @SignatureAuth
-    @RequestMapping(value = "/configItems", params = {"!pageNo", "!pageSize", "namespace", "env", "componentCode", "type"})
+    @GetMapping(value = "/configItems", params = {"!pageNo", "!pageSize", "namespace", "env", "componentCode", "type"})
     public String queryConfigItem(
             @RequestParam String namespace,
             @RequestParam String env,

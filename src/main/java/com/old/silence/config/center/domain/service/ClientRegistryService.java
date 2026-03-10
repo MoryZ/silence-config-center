@@ -111,8 +111,11 @@ public class ClientRegistryService {
 
     private void cleanInactiveClients() {
         long threshold = Instant.now().minus(10, ChronoUnit.MINUTES).toEpochMilli();
-        configListeners.entrySet().removeIf(entry ->
-                entry.getValue().removeIf(clientInfo -> clientInfo.getLastHeartbeat() < threshold)
-        );
+        configListeners.forEach((configKey, clients) -> {
+            clients.removeIf(clientInfo -> clientInfo.getLastHeartbeat() < threshold);
+            if (clients.isEmpty()) {
+                configListeners.remove(configKey, clients);
+            }
+        });
     }
 }
