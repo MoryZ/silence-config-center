@@ -1,5 +1,8 @@
 package com.old.silence.config.center.api;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.old.silence.config.center.api.assembler.ConfigItemMapper;
+import com.old.silence.config.center.api.config.annotation.SignatureAuth;
 import com.old.silence.config.center.domain.model.ConfigItem;
 import com.old.silence.config.center.domain.repository.ConfigEnvironmentRepository;
 import com.old.silence.config.center.domain.repository.ConfigItemRepository;
@@ -26,8 +30,6 @@ import com.old.silence.config.center.vo.ConfigItemVo;
 import com.old.silence.core.util.CollectionUtils;
 import com.old.silence.data.commons.converter.QueryWrapperConverter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -52,7 +54,8 @@ public class ConfigItemResource {
         this.clientRegistryService = clientRegistryService;
     }
 
-    @RequestMapping(value = "/configItems", params = {"!pageNo", "!pageSize", "namespace", "env", "componentCode", "type"})
+    @SignatureAuth
+    @GetMapping(value = "/configItems", params = {"!pageNo", "!pageSize", "namespace", "env", "componentCode", "type"})
     public String queryConfigItem(
             @RequestParam String namespace,
             @RequestParam String env,
@@ -66,14 +69,14 @@ public class ConfigItemResource {
     public IPage<ConfigItemVo> query(Page<ConfigItem> page, ConfigItemQuery configItemQuery) {
 
         var queryWrapper = QueryWrapperConverter.convert(configItemQuery, ConfigItem.class);
-        var configItemPage = configItemRepository.query(page, queryWrapper);
+        var configItemPage = configItemRepository.queryPage(page, queryWrapper);
         AtomicReference<ConfigEnvironmentVo> configEnvironmentVo = new AtomicReference<>();
         if (CollectionUtils.isNotEmpty(configItemPage.getRecords())) {
             CollectionUtils.firstElement(configItemPage.getRecords())
                     .map(ConfigItem::getConfigEnvironmentId)
-                    .ifPresent(configEnvironmentId -> {
-                        configEnvironmentVo.set(configEnvironmentRepository.findById(configEnvironmentId));
-                    });
+                    .ifPresent(configEnvironmentId ->
+                            configEnvironmentVo.set(configEnvironmentRepository.findById(configEnvironmentId))
+                    );
 
         }
 
@@ -92,6 +95,15 @@ public class ConfigItemResource {
         });
     }
 
+    @GetMapping(value = "/configItems", params = {"!pageNo", "!pageSize", "configComponentId", "environmentName"})
+    public List<ConfigItem> query(@RequestParam BigInteger configComponentId, @RequestParam String environmentName) {
+        var configEnvironment = configEnvironmentRepository.findByConfigComponentIdAndName(configComponentId, environmentName);
+        if (configEnvironment == null) {
+            return List.of();
+        }
+        return configItemRepository.findByConfigEnvironmentId(configEnvironment.getId());
+    }
+
     @GetMapping("/configItems/{id}")
     public ConfigItem findById(@PathVariable BigInteger id) {
         return configItemRepository.findById(id);
@@ -107,14 +119,15 @@ public class ConfigItemResource {
     public void update(@PathVariable BigInteger id, @RequestBody ConfigItemCommand configItemCommand) {
         var configItem = configItemMapper.convert(configItemCommand);
         configItem.setId(id);
-        configItemRepository.update(configItem);
+        configItemRepository.update(configItem, configItemCommand.getOperationType());
     }
 
     @PutMapping("/configItems/{id}/content")
     public int updateConfigContent(@PathVariable BigInteger id, @RequestBody ConfigItemContentCommand command) {
-        return configItemRepository.updateContentById(command.getContent(), id);
+        return configItemRepository.updateContentById(command.getContent(), command.getOperationType(), id);
     }
 
+    @SignatureAuth
     @GetMapping("/configItems/subscribe")
     public void subscribe(String env, String componentCode, String namespace, HttpServletRequest request, HttpServletResponse response) {
         longPollingService.subscribeConfig(env, componentCode, namespace, request, response);
@@ -125,7 +138,7 @@ public class ConfigItemResource {
         configItemRepository.deleteById(id);
     }
 
-    @DeleteMapping("/configItems/batch")
+    @DeleteMapping("/configItems/batchDelete")
     public void batchDeleteConfig(@RequestBody List<BigInteger> ids) {
         configItemRepository.batchDeleteConfig(ids);
     }

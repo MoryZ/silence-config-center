@@ -34,7 +34,7 @@ public class ConfigItemHistoryMyBatisRepository implements ConfigItemHistoryRepo
     @Override
     public List<ConfigItemHistory> findByConfigItemId(BigInteger configItemId) {
         QueryWrapper<ConfigItemHistory> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("config_item_id", configItemId);
+        queryWrapper.lambda().eq(ConfigItemHistory::getConfigItemId, configItemId);
         return configItemHistoryDao.selectList(queryWrapper);
     }
 

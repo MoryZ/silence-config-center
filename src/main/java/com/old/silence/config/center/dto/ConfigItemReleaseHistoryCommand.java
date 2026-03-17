@@ -1,5 +1,6 @@
 package com.old.silence.config.center.dto;
 
+import com.old.silence.config.center.enums.DistributionStrategy;
 import com.old.silence.config.center.enums.ReleaseType;
 
 import java.math.BigInteger;
@@ -28,6 +29,8 @@ public class ConfigItemReleaseHistoryCommand {
      * 修改后的值
      */
     private String content;
+
+    private DistributionStrategy distributionStrategy;
 
     /**
      * 发布类型（普通发布/灰度发布）
@@ -72,5 +75,13 @@ public class ConfigItemReleaseHistoryCommand {
 
     public void setReleaseType(ReleaseType releaseType) {
         this.releaseType = releaseType;
+    }
+
+    public DistributionStrategy getDistributionStrategy() {
+        return distributionStrategy;
+    }
+
+    public void setDistributionStrategy(DistributionStrategy distributionStrategy) {
+        this.distributionStrategy = distributionStrategy;
     }
 }

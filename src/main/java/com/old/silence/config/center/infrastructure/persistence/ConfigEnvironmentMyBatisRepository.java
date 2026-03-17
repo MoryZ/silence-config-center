@@ -28,6 +28,14 @@ public class ConfigEnvironmentMyBatisRepository implements ConfigEnvironmentRepo
     }
 
     @Override
+    public ConfigEnvironment findByConfigComponentIdAndName(BigInteger configComponentId, String environmentName) {
+        QueryWrapper<ConfigEnvironment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(ConfigEnvironment::getConfigComponentId, configComponentId);
+        queryWrapper.lambda().eq(ConfigEnvironment::getName, environmentName);
+        return configEnvironmentDao.selectOne(queryWrapper);
+    }
+
+    @Override
     public ConfigEnvironmentVo findById(BigInteger id) {
         return configEnvironmentDao.findById(id);
     }
@@ -39,13 +47,11 @@ public class ConfigEnvironmentMyBatisRepository implements ConfigEnvironmentRepo
 
     @Override
     public int update(ConfigEnvironment configEnvironment) {
-        configEnvironmentDao.updateById(configEnvironment);
-        return 0;
+        return configEnvironmentDao.updateById(configEnvironment);
     }
 
     @Override
     public int deleteById(BigInteger id) {
-        configEnvironmentDao.deleteById(id);
-        return 0;
+        return configEnvironmentDao.deleteById(id);
     }
 }

@@ -25,7 +25,7 @@ public class ClientResource {
     /**
      * 注册监听接口
      *
-     * @param configKey componentCode + env + filename 例如 A+CI-1+application.yml
+     * @param configKey componentCode + env + namespace 例如 A+CI-1+bootstrap.yml
      * @param clientId  客户id
      * @param ip        获取到的ip
      * @return 注册结果
@@ -36,16 +36,14 @@ public class ClientResource {
             @RequestParam String clientId,
             @RequestParam String ip) {
 
-        clientRegistryService.registerListener(
-                configKey, new ClientInfo(clientId, ip, configKey)
-        );
+        clientRegistryService.registerListener(configKey, new ClientInfo(clientId, ip, configKey));
         return true;
     }
 
     /**
      * 取消注册监听接口
      *
-     * @param configKey componentCode + env + filename 例如 A+CI-1+application.yml
+     * @param configKey componentCode + env + filename 例如 A+CI-1+bootstrap.yml
      * @param clientId  客户id
      * @return 注册结果
      */

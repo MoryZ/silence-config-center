@@ -22,4 +22,5 @@ public interface ConfigEnvironmentDao extends BaseMapper<ConfigEnvironment> {
     )
     ConfigEnvironmentVo findById(BigInteger id);
 
+
 }

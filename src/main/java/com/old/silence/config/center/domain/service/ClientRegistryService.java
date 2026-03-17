@@ -1,11 +1,12 @@
 package com.old.silence.config.center.domain.service;
 
+import jakarta.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.old.silence.config.center.domain.service.support.ClientInfo;
 
-import javax.annotation.PostConstruct;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
@@ -45,13 +46,13 @@ public class ClientRegistryService {
                 k -> ConcurrentHashMap.newKeySet()
         );
 
-        // 移除同IP同进程的旧记录（处理重启场景）
+        // 移除同IP同端口的旧记录（处理重启场景）
         clients.removeIf(existing ->
-                existing.isSameInstance(newClient)
-                        && !existing.getClientId().equals(newClient.getClientId())
+                existing.isSameInstance(newClient)  // 基于IP、端口、进程ID等判断
         );
 
         clients.add(newClient);
+        logger.debug("Registered client {} for config key {}", newClient, configKey);
     }
 
     public synchronized void unregisterClient(String clientId) {
@@ -110,8 +111,11 @@ public class ClientRegistryService {
 
     private void cleanInactiveClients() {
         long threshold = Instant.now().minus(10, ChronoUnit.MINUTES).toEpochMilli();
-        configListeners.entrySet().removeIf(entry ->
-                entry.getValue().removeIf(clientInfo -> clientInfo.getLastHeartbeat() < threshold)
-        );
+        configListeners.forEach((configKey, clients) -> {
+            clients.removeIf(clientInfo -> clientInfo.getLastHeartbeat() < threshold);
+            if (clients.isEmpty()) {
+                configListeners.remove(configKey, clients);
+            }
+        });
     }
 }

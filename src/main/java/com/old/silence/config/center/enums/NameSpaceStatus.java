@@ -9,7 +9,8 @@ import com.old.silence.core.enums.DescribedEnumValue;
 public enum NameSpaceStatus implements DescribedEnumValue<Byte> {
 
     SAVED(1, "已保存"),
-    PUBLISHED(2, "已发布"),
+    PUBLISHING(2, "发布中"),
+    PUBLISHED(3, "已发布"),
     ;
 
     private final Byte value;
