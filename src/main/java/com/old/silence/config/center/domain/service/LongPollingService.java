@@ -39,9 +39,9 @@ public class LongPollingService {
     /**
      * 添加订阅者
      */
-    public void subscribeConfig(String group, String appId, String namespace,
+    public void subscribeConfig(String group, String componentCode, String namespace,
                                 HttpServletRequest request, HttpServletResponse response) {
-        String key = String.join("-", appId, group, namespace);
+        String key = String.join("-", componentCode, group, namespace);
         AsyncContext context = request.startAsync();
 
         // 设置超时

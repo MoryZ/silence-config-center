@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${DB_URL:jdbc:mysql://localhost:3306/silence-platform?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false}
+    url: ${DB_URL:jdbc:mysql://192.168.50.162:3306/silence-platform?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:123456}
     type: com.zaxxer.hikari.HikariDataSource
@@ -20,7 +20,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
+        server-addr: ${NACOS_SERVER_ADDR:192.168.50.162:8848}
         username: ${NACOS_USERNAME:nacos}
         password: ${NACOS_PASSWORD:nacos}
 silence:
@@ -28,4 +28,4 @@ silence:
     center:
       security:
         api:
-          white-list: /api/v1/configItems/**,/api/v1/configItemReleaseHistories/release,/api/v1/client/**,/api/v1/configCyberarkInfos/pwd/getPassword
+          white-list: /api/v1/configItems/**,/api/v1/configItemReleaseHistories/release,/api/v1/client/**,/api/v1/cyberarkInfos/pwd/getPassword

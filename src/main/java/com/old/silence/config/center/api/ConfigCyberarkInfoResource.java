@@ -37,42 +37,42 @@ public class ConfigCyberarkInfoResource {
         this.configCyberarkInfoMapper = configCyberarkInfoMapper;
     }
 
-    @PostMapping(value = "/configCyberarkInfos/pwd/getPassword")
+    @PostMapping(value = "/cyberarkInfos/pwd/getPassword")
     public ConfigCyberarkInfoVo findByRemoteRequest(@RequestBody ConfigCyberarkInfoRequest configCyberarkInfoRequest) {
         return configCyberarkInfoService.findByRemoteRequest(configCyberarkInfoRequest);
     }
 
-    @GetMapping(value = "/configCyberarkInfos", params = {"pageNo", "pageSize" })
+    @GetMapping(value = "/cyberarkInfos", params = {"pageNo", "pageSize" })
     public Page<ConfigCyberarkInfo> query(Page<ConfigCyberarkInfo> page, ConfigCyberarkInfoQuery query) {
         var queryWrapper = QueryWrapperConverter.convert(query, ConfigCyberarkInfo.class);
         return configCyberarkInfoRepository.query(page, queryWrapper);
     }
 
-    @PostMapping("/configCyberarkInfos")
+    @PostMapping("/cyberarkInfos")
     public BigInteger create(@RequestBody ConfigCyberarkInfoCommand configCyberarkInfoCommand) {
         var configCyberarkInfo = configCyberarkInfoMapper.convert(configCyberarkInfoCommand);
         configCyberarkInfoService.create(configCyberarkInfo);
         return configCyberarkInfo.getId();
     }
 
-    @PutMapping("/configCyberarkInfos/{id}")
+    @PutMapping("/cyberarkInfos/{id}")
     public void update(@PathVariable BigInteger id, @RequestBody ConfigCyberarkInfoCommand configCyberarkInfoCommand) {
         var configCyberarkInfo = configCyberarkInfoMapper.convert(configCyberarkInfoCommand);
         configCyberarkInfo.setId(id);
         configCyberarkInfoService.update(configCyberarkInfo);
     }
 
-    @PutMapping("/configCyberarkInfos/{id}/enable")
+    @PutMapping("/cyberarkInfos/{id}/enable")
     public void enable(@PathVariable BigInteger id) {
         configCyberarkInfoRepository.updateEnabled(true, id);
     }
 
-    @PutMapping("/configCyberarkInfos/{id}/disable")
+    @PutMapping("/cyberarkInfos/{id}/disable")
     public void disable(@PathVariable BigInteger id) {
         configCyberarkInfoRepository.updateEnabled(false, id);
     }
 
-    @DeleteMapping("/configCyberarkInfos/{id}")
+    @DeleteMapping("/cyberarkInfos/{id}")
     public void delete(@PathVariable BigInteger id) {
         configCyberarkInfoRepository.deleteById(id);
     }

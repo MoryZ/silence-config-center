@@ -3,9 +3,10 @@ package com.old.silence.config.center.domain.service;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.old.silence.config.center.domain.model.ConfigCyberarkInfo;
-import com.old.silence.config.center.domain.repository.ConfigAccessKeysRepository;
 import com.old.silence.config.center.domain.repository.ConfigCyberarkInfoRepository;
 import com.old.silence.config.center.dto.ConfigCyberarkInfoRequest;
 import com.old.silence.config.center.util.AESUtils;
@@ -22,21 +23,17 @@ import java.util.UUID;
 public class ConfigCyberarkInfoService {
 
 
-
+    private static final Logger log = LoggerFactory.getLogger(ConfigCyberarkInfoService.class);
     private final ConfigCyberarkInfoRepository configCyberarkInfoRepository;
-    private final ConfigAccessKeysRepository configAccessKeysRepository;
 
-    public ConfigCyberarkInfoService(ConfigCyberarkInfoRepository configCyberarkInfoRepository,
-                                     ConfigAccessKeysRepository configAccessKeysRepository) {
+    public ConfigCyberarkInfoService(ConfigCyberarkInfoRepository configCyberarkInfoRepository) {
         this.configCyberarkInfoRepository = configCyberarkInfoRepository;
-        this.configAccessKeysRepository = configAccessKeysRepository;
     }
 
     public ConfigCyberarkInfoVo findByRemoteRequest(ConfigCyberarkInfoRequest configCyberarkInfoRequest) {
         // 1.校验签名
-        validateSignature(configCyberarkInfoRequest);
-        // 2.查找密码映射
-        var password = findPasswordByComponentCodeAndCyberarkObject(configCyberarkInfoRequest.getAppId(), configCyberarkInfoRequest.getObject());
+        var password = validateSignature(configCyberarkInfoRequest);
+
 
         //3.拼接返回
         return buildResponse(configCyberarkInfoRequest, password);
@@ -45,24 +42,27 @@ public class ConfigCyberarkInfoService {
     /**
      * 1. 校验签名
      */
-    private void validateSignature(ConfigCyberarkInfoRequest request) {
+    private String validateSignature(ConfigCyberarkInfoRequest request) {
         if (request == null || StringUtils.isBlank(request.getAppId()) || StringUtils.isBlank(request.getSignature())) {
             throw CommonErrors.INVALID_PARAMETER.createException("appId/signature");
         }
 
         // 根据appId查询对应的appKey
-        var configAccessKeys = configAccessKeysRepository.findByAccessKey(request.getAppId());
-        if (configAccessKeys == null) {
-            throw CommonErrors.INVALID_PARAMETER.createException("appId");
+        var configCyberarkInfo = configCyberarkInfoRepository.findByComponentCodeAndCyberarkObject(request.getAppId(), request.getObject());
+        if (configCyberarkInfo == null) {
+            log.error("appId {} has no secret key", request.getAppId());
+            throw CommonErrors.INVALID_PARAMETER.createException(request.getAppId());
         }
 
         // 生成预期签名
-        String expectedSignature = generateSignature(request.getAppId(), configAccessKeys.getSecretKey());
+        String expectedSignature = generateSignature(request.getAppId(), configCyberarkInfo.getAppKey());
 
         // 比较签名
         if (!expectedSignature.equals(request.getSignature())) {
+            log.error("appId {} has signature of {} ", request.getAppId(), request.getSignature());
             throw CommonErrors.ACCESS_DENIED.createException("签名验证失败!");
         }
+        return configCyberarkInfo.getEncryptedValue();
     }
 
     /**
